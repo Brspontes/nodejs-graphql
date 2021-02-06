@@ -1,5 +1,22 @@
 const { ApolloServer, gql } = require('apollo-server')
 
+const usuarios =[{
+  id: 1,
+  nome: 'João',
+  email: 'Joao@Joao.com',
+  idade: 29
+}, {
+  id: 2,
+  nome: 'João 2',
+  email: 'Joao2@Joao.com',
+  idade: 29
+}, {
+  id: 3,
+  nome: 'João 3',
+  email: 'Joao3@Joao.com',
+  idade: 29
+}]
+
 const typeDefs = gql`
 
   scalar Date
@@ -12,7 +29,7 @@ const typeDefs = gql`
   }
 
   type Usuario {
-    id: ID!
+    id: Int!
     nome: String!
     email: String!
     idade: Int
@@ -27,6 +44,8 @@ const typeDefs = gql`
     usuarioLogado: Usuario
     produtoEmDestaque: Produto
     numerosMegaSena: [Int!]!
+    usuarios: [Usuario]
+    usuario(id: Int!): Usuario
   }
 `
 
@@ -72,6 +91,13 @@ const resolvers = {
     numerosMegaSena() {
       const crescente =  (a, b) => a - b
       return Array(6).fill(0).map(n => parseInt(Math.random() * 60 + 1)).sort(crescente)
+    },
+    usuarios() {
+      return usuarios
+    },
+    usuario(_, { id }) {
+      const selecionados = usuarios.filter(u => u.id === id)
+      return selecionados ? selecionados[0] : null
     }
   }
 }
